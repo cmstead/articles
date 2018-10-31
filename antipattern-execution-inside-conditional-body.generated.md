@@ -6,6 +6,7 @@
 - [Section 1: Introduction](#user-content-introduction)
 - [Section 2: The Setup](#user-content-the-setup)
 - [Section 3: Same Action, Different Values](#user-content-same-action,-different-values)
+- [Section 4: Different Actions, Same Values](#user-content-different-actions,-same-values)
 
 ## Introduction ##
 
@@ -179,6 +180,8 @@ function modifyStateValues(stateObject, a, b) {
 }
 ```
 
+Since all conditions now execute identical behaviors, we can safely remove all conditional blocks and just call through directly.
+
 ```javascript
 function modifyStateValues(stateObject, a, b) {
     const defaultAValue = 'defaultAValue';
@@ -192,6 +195,8 @@ function modifyStateValues(stateObject, a, b) {
         .setState('b', sanitizedBValue);
 }
 ```
+
+Depending on your preferred style of coding, this may be enough to stop.  We have satisfied all of the conditions with significantly fewer lines of code, which all produce values with context-rich names.  I tend to prefer to extract ternary expressions as well so we understand the context by simply reading the function name and associated arguments.
 
 ```javascript
 function valueOrDefault(value, defaultValue) {
@@ -211,6 +216,8 @@ function modifyStateValues(stateObject, a, b) {
 }
 ```
 
+Finally, since we have already extracted all of the logic and the default value is consumed in only one place, it is likely safe to inline the `defaultAValue` and `defaultBValue` variables.  This really boils down to coding standards and personal preference. Either way, the following code reflects the final state of how I would approach this problem.
+
 ```javascript
 function valueOrDefault(value, defaultValue) {
     return typeof value === 'undefined' || value === null ? value : defaultValue;
@@ -225,6 +232,12 @@ function modifyStateValues(stateObject, a, b) {
         .setState('b', sanitizedBValue);
 }
 ```
+
+Since we went through a series of safe changes within the code, it's clear that the 11 lines of high-signal, low-noise code we ended up with is functionally equivalent to the original, noisy 25 lines of code.  This also shows us that the problem we were really trying to solve was not an execution problem, but a value selection problem.  As we move through the other three cases, it will start to become clear that any of the conditions we have devised are also simply value-selection problems.
+    
+
+## Different Actions, Same Values ##
+
     
 
     
